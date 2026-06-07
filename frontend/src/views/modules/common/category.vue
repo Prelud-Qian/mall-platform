@@ -1,16 +1,6 @@
 <template>
-  <div>
-    <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
-    <el-tree
-      :data="menus"
-      :props="defaultProps"
-      node-key="catId"
-      ref="menuTree"
-      @node-click="nodeclick"
-      :filter-node-method="filterNode"
-      :highlight-current = "true"
-    ></el-tree>
-  </div>
+  <el-tree :data="menus" :props="defaultProps" node-key="catId" ref="menuTree" @node-click="nodeclick">
+  </el-tree>
 </template>
 
 <script>
@@ -24,13 +14,12 @@ export default {
   data() {
     //这里存放数据
     return {
-      filterText: "",
       menus: [],
       expandedKey: [],
       defaultProps: {
         children: "children",
-        label: "name"
-      }
+        label: "name",
+      },
     };
   },
   //计算属性 类似于data概念
@@ -39,7 +28,7 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.menuTree.filter(val);
-    }
+    },
   },
   //方法集合
   methods: {
@@ -51,8 +40,9 @@ export default {
     getMenus() {
       this.$http({
         url: this.$http.adornUrl("/product/category/list/tree"),
-        method: "get"
+        method: "get",
       }).then(({ data }) => {
+        console.log("成功获取到菜单数据...", data.data);
         this.menus = data.data;
       });
     },
@@ -60,7 +50,7 @@ export default {
       console.log("子组件category的节点被点击", data, node, component);
       //向父组件发送事件；
       this.$emit("tree-node-click", data, node, component);
-    }
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -74,9 +64,8 @@ export default {
   updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
-<style scoped>
-
+<style>
 </style>
