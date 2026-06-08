@@ -280,8 +280,8 @@ export default {
       }).then(({ data }) => {
         // 请求成功
         console.log("要回显的数据", data);
-        if (data && data.category) {
-          const category = data.category;
+        if (data && data.data) {
+          const category = data.data;
           this.category.name = category.name;
           this.category.catId = category.catId;
           this.category.icon = category.icon || "";
