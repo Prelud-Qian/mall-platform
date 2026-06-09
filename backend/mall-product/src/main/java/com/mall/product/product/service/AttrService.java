@@ -22,7 +22,7 @@ public interface AttrService extends IService<AttrEntity> {
 
     void saveAttr(AttrVo attr) throws InvocationTargetException, IllegalAccessException;
 
-    PageUtils queryBaseAttrPage(Map<String, Object> params, Long catelogId);
+    PageUtils queryBaseAttrPage(Map<String, Object> params, Long catelogId, String type);
 
     AttrRespVo getAttrInfo(Long attrId) throws InvocationTargetException, IllegalAccessException;
 
