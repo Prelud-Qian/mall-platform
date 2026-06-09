@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.mall</groupId>
+
+	<!-- 1. 关联父项目 mall（所有子模块都一样，不用改） -->
+	<parent>
+		<groupId>com.mall</groupId>
+		<artifactId>mall</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<!-- 2. 子模块自身信息（仅改这里！替换为对应子模块名称） -->
+	<artifactId>mall-coupon</artifactId> <!-- 需修改：coupon/member/order/ware -->
+	<version>0.0.1-SNAPSHOT</version>
+	<name>mall-coupon</name> <!-- 需修改：对应子模块名称 -->
+	<description>mall-coupon module</description> <!-- 需修改：对应子模块描述 -->
+
+	<!-- 3. 统一管理依赖版本（所有子模块都一样，不用改） -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- SpringBoot 父依赖 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>2.6.6</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- 4. 项目核心依赖（根据子模块需求保留/新增，基础依赖通用） -->
+	<dependencies>
+		<dependency>
+			<groupId>com.mall</groupId>
+			<artifactId>mall-common</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- SpringBoot Web（所有子模块基本都需要） -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- OpenFeign（如果子模块需要远程调用就加，不需要可删除） -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<!-- 测试依赖（所有子模块通用） -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- 5. SpringBoot 打包插件（所有子模块都一样，不用改） -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.6.6</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

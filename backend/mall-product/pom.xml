@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- 1. 关联自定义父项目 mall（唯一的直接parent） -->
+	<parent>
+		<groupId>com.mall</groupId>
+		<artifactId>mall</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<!-- 2. 子模块自身信息 -->
+	<artifactId>mall-product</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<name>mall-product</name>
+	<description>mall-product module</description>
+
+	<!-- 3. 统一管理依赖版本（只保留一个dependencyManagement标签） -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- 导入SpringBoot父依赖 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>2.6.6</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- 其他需要统一版本的依赖都放在这个标签里，不要重复建 -->
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- 4. 项目实际依赖（SpringBoot web/feign等） -->
+	<dependencies>
+		<dependency>
+			<groupId>com.mall</groupId>
+			<artifactId>mall-third-party-service</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mall</groupId>
+			<artifactId>mall-common</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.5.5</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+	<!-- 5. SpringBoot打包插件 -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.6.6</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

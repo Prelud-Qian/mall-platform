@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    alicloud:
+      access-key: my-access-key
+      secret-key: my-secret-key
+      oss:
+        endpoint: oss-cn-shanghai.aliyuncs.com
+        bucket: mall-prelud
+
+  application:
+    name: mall-third-party-service
+
+server:
+  port: 30000
