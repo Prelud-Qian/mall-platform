@@ -9,6 +9,7 @@ import com.mall.product.product.entity.AttrAttrgroupRelationEntity;
 import com.mall.product.product.entity.AttrGroupEntity;
 import com.mall.product.product.entity.CategoryEntity;
 import com.mall.product.product.service.CategoryService;
+import com.mall.product.product.vo.AttrGroupRelationVo;
 import com.mall.product.product.vo.AttrRespVo;
 import com.mall.product.product.vo.AttrVo;
 import org.apache.commons.beanutils.BeanUtils;
@@ -17,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -68,7 +68,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         // 保存基本数据
         this.save(attrEntity);
         // 保存关联关系
-        if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+        if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode() && attr.getAttrGroupId() != null){
             AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
             relationEntity.setAttrGroupId(attr.getAttrGroupId());
             relationEntity.setAttrId(attrEntity.getAttrId());
@@ -128,7 +128,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                     AttrAttrgroupRelationEntity attrId = relationDao.selectOne(
                             new QueryWrapper<AttrAttrgroupRelationEntity>()
                                     .eq("attr_id", attrEntity.getAttrId()));
-                    if (attrId != null) {
+                    if (attrId != null && attrId.getAttrGroupId() != null) {
                         // 拿着分组 ID 去分组表查分组名字
                         AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrId.getAttrGroupId());
                         attrRespVo.setGroupName(attrGroupEntity.getAttrGroupName());
@@ -205,5 +205,125 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                 relationDao.insert(relationEntity);
             }
         }
+    }
+
+    /**
+     * 根据分组id查找关联的所有基本属性
+     * @param attrgroupId
+     * @return
+     */
+    @Override
+    public List<AttrEntity> getRelationAttr(Long attrgroupId) {
+        List<AttrAttrgroupRelationEntity> entities = relationDao.selectList(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrgroupId));
+
+        List<Long> attrIds = entities.stream().map((attr) -> {
+            return attr.getAttrId();
+        }).collect(Collectors.toList());
+
+        // 增加空判断：没有关联属性直接返回空集合，不查数据库
+        if (attrIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Collection<AttrEntity> attrEntities = this.listByIds(attrIds);
+        return (List<AttrEntity>) attrEntities;
+    }
+
+    @Override
+    public void deleteRelation(AttrGroupRelationVo[] vos) {
+        // 把前端传过来的 VO 对象 → 转换成数据库实体类对象
+        /**
+         * 把数组转成 List 方便处理
+         * 遍历每一条要删除的关联
+         * 创建数据库对应的实体对象
+         * 把 Vo 的 attrId、attrGroupId 复制到实体类
+         * 把所有实体收集到一个 list
+         */
+        List<AttrAttrgroupRelationEntity> entities = Arrays.asList(vos).stream().map((item) -> {
+            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+            try {
+                BeanUtils.copyProperties(relationEntity, item);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+            return relationEntity;
+        }).collect(Collectors.toList());
+        // 调用 DAO，批量删除这些关联
+        relationDao.deleteBatchRelation(entities);
+    }
+
+    /**
+     * 获取当前分组没有关联的所有属性
+     * @param params
+     * @param attrgroupId
+     * @return
+     */
+    @Override
+    public PageUtils getNoRelationAttr(Map<String, Object> params, Long attrgroupId) {
+
+        /**
+         * 多个属性分组 同属于 一个分类
+         * 一个分类下有 多个基础属性
+         * 属性分组 只能关联自己所属分类内的基础属性
+         * 如果某一个属性分组关联了一个属性，那么同一分类下的其他属性分组就不能查询出且关联上这个属性了
+         */
+
+        /**
+         * 根据传入的分组 ID，去pms_attr_group查询整条分组数据
+         * 取出分组绑定的分类catelogId
+         */
+        // 当前分组只能绑定同分类下的属性，不能跨分类拿属性
+        AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgroupId);
+        Long catelogId = attrGroupEntity.getCatelogId();
+        /**
+         * 当前分组只能关联别的分组没有引用的属性
+         * 查出当前分类下全部其他相同分类的属性分组
+         */
+        // 查询该分类下所有属性分组（包含传入的 attrgroupId 本身）
+        List<AttrGroupEntity> group = attrGroupDao.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+        // Stream 流式遍历分组列表，只提取所有分组的主键 attr_group_id，打包成 Long 集合
+        List<Long> collect = group.stream().map(item -> {
+            return item.getAttrGroupId();
+        }).collect(Collectors.toList());
+
+        // 查询这些分组已经绑定了哪些属性（中间表）
+        /**
+         * 操作中间表pms_attr_attrgroup_relation
+         * 条件：attr_group_id IN (所有同分类分组id集合)
+         * 拿到所有同分类下 属性分组已经绑定过的全部关联记录
+         */
+        List<AttrAttrgroupRelationEntity> groupId = relationDao.selectList(
+                new QueryWrapper<AttrAttrgroupRelationEntity>().in("attr_group_id", collect));
+        // 用 stream 提取所有被绑定属性的 attr_id，存入 attrIds 集合
+        List<Long> attrIds = groupId.stream().map(item -> {
+            return item.getAttrId();
+        }).collect(Collectors.toList());
+
+        // 从当前分类的所有属性中移除这些属性
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId) // 条件1：只查当前分类
+                .eq("attr_type", ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()); // 条件2：只查基础属性（1）
+        // 排除已经被同分类任意分组绑定过的属性
+        if (attrIds != null && attrIds.size() > 0){
+            // notIn = attr_id 不在已绑定属性 id 集合里，剩下的就是「未关联属性」
+            wrapper.notIn("attr_id", attrIds);
+        }
+
+        // 搜索关键字 key 逻辑
+        String key = (String) params.get("key");
+        if (!StringUtils.isEmpty(key)){
+            wrapper.and((w) -> {
+                w.eq("attr_id", key).or().like("attr_name", key);
+            });
+        }
+
+        // 分页查询 MyBatis-Plus
+        IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(params), wrapper);
+
+        // 封装分页工具返回
+        PageUtils pageUtils = new PageUtils(page);
+
+        return pageUtils;
     }
 }

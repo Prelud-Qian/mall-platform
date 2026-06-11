@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.mall.product.product.vo.AttrGroupRelationVo;
 import com.mall.product.product.vo.AttrRespVo;
 import com.mall.product.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
