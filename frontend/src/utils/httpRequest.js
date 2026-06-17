@@ -26,11 +26,29 @@ http.interceptors.request.use(config => {
 /**
  * 响应拦截
  */
+// http.interceptors.response.use(response => {
+//   if (response.data && response.data.code === 401) { // 401, token失效
+//     clearLoginInfo()
+//     router.push({ name: 'login' })
+//   }
+//   return response
+// }, error => {
+//   return Promise.reject(error)
+// })
 http.interceptors.response.use(response => {
-  if (response.data && response.data.code === 401) { // 401, token失效
+  const res = response.data
+  // token过期处理
+  if (res && res.code === 401) {
     clearLoginInfo()
     router.push({ name: 'login' })
+    // 抛出异常，不再走页面then成功逻辑
+    return Promise.reject(res)
   }
+  // 新增：所有业务错误码code≠0，全部抛异常进入页面catch
+  if (res && res.code !== 0) {
+    return Promise.reject(res)
+  }
+  // 只有code=0正常业务才返回给then
   return response
 }, error => {
   return Promise.reject(error)

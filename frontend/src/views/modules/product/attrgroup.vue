@@ -147,10 +147,12 @@
 
 import category from "../common/category.vue";
 import AddOrUpdate from "./attrgroup-add-or-update";
+import RelationUpdate from "./attr-group-relation";
+
 
 export default {
   //import 引入的组件需要注入到对象中才能使用
-  components: { category, AddOrUpdate },
+  components: { category, AddOrUpdate, RelationUpdate },
   props: {},
   data() {
     return {
