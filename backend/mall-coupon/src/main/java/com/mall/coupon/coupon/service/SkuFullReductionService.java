@@ -3,7 +3,9 @@ package com.mall.coupon.coupon.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.mall.common.utils.PageUtils;
 import com.mall.coupon.coupon.entity.SkuFullReductionEntity;
+import com.to.SkuReductionTo;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface SkuFullReductionService extends IService<SkuFullReductionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSkuReduction(SkuReductionTo skuReductionTo) throws InvocationTargetException, IllegalAccessException;
 }
 

@@ -56,6 +56,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.5.5</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>2.1.2</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<!-- 5. SpringBoot 打包插件 → 改成 2.6.6 -->

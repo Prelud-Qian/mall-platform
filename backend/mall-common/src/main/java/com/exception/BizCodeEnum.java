@@ -24,7 +24,10 @@ public enum BizCodeEnum {
     // 枚举实例（常量对象）
     // 枚举常量 是public static final全局唯一实例，类加载时就创建好
     UNKNOW_EXCEPTION(10000, "系统未知异常"),
-    VALID_EXCEPTION(10001, "参数格式校验失败");
+    VALID_EXCEPTION(10001, "参数格式校验失败"),
+
+    // 仓储采购模块
+    PURCHASE_MERGE_FAIL(15001, "合并失败：仅【新建】状态采购单、新建状态采购需求允许合并");
 
     private int code;
     private String msg;

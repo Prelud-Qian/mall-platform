@@ -13,6 +13,8 @@ spring:
       secret-key: my-secret-key
       oss:
         endpoint: oss-cn-shanghai.aliyuncs.com
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -28,6 +30,5 @@ server:
 logging:
   level:
     com.mall.product.product: debug
-
 
 
