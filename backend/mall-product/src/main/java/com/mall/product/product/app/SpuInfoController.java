@@ -1,8 +1,10 @@
-package com.mall.product.product.controller;
+package com.mall.product.product.app;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.mall.product.product.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,33 +12,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mall.product.product.entity.SpuImagesEntity;
-import com.mall.product.product.service.SpuImagesService;
+import com.mall.product.product.entity.SpuInfoEntity;
+import com.mall.product.product.service.SpuInfoService;
 import com.mall.common.utils.PageUtils;
 import com.mall.common.utils.R;
 
 
 
 /**
- * spu图片
+ * spu信息
  *
  * @author preludqian
  * @email 2551932043@qq.com
  * @date 2026-05-19 21:42:34
  */
 @RestController
-@RequestMapping("product/spuimages")
-public class SpuImagesController {
+@RequestMapping("product/spuinfo")
+public class SpuInfoController {
     @Autowired
-    private SpuImagesService spuImagesService;
+    private SpuInfoService spuInfoService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
-    //@RequiresPermissions("product:spuimages:list")
+    //@RequiresPermissions("product:spuinfo:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = spuImagesService.queryPage(params);
+        PageUtils page = spuInfoService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }
@@ -46,20 +48,20 @@ public class SpuImagesController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    //@RequiresPermissions("product:spuimages:info")
+    //@RequiresPermissions("product:spuinfo:info")
     public R info(@PathVariable("id") Long id){
-		SpuImagesEntity spuImages = spuImagesService.getById(id);
+		SpuInfoEntity spuInfo = spuInfoService.getById(id);
 
-        return R.ok().put("spuImages", spuImages);
+        return R.ok().put("spuInfo", spuInfo);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    //@RequiresPermissions("product:spuimages:save")
-    public R save(@RequestBody SpuImagesEntity spuImages){
-		spuImagesService.save(spuImages);
+    //@RequiresPermissions("product:spuinfo:save")
+    public R save(@RequestBody SpuSaveVo vo) throws InvocationTargetException, IllegalAccessException {
+        spuInfoService.saveSpuInfo(vo);
 
         return R.ok();
     }
@@ -68,9 +70,9 @@ public class SpuImagesController {
      * 修改
      */
     @RequestMapping("/update")
-    //@RequiresPermissions("product:spuimages:update")
-    public R update(@RequestBody SpuImagesEntity spuImages){
-		spuImagesService.updateById(spuImages);
+    //@RequiresPermissions("product:spuinfo:update")
+    public R update(@RequestBody SpuInfoEntity spuInfo){
+		spuInfoService.updateById(spuInfo);
 
         return R.ok();
     }
@@ -79,9 +81,9 @@ public class SpuImagesController {
      * 删除
      */
     @RequestMapping("/delete")
-    //@RequiresPermissions("product:spuimages:delete")
+    //@RequiresPermissions("product:spuinfo:delete")
     public R delete(@RequestBody Long[] ids){
-		spuImagesService.removeByIds(Arrays.asList(ids));
+		spuInfoService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

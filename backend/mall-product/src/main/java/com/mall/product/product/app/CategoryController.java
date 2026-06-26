@@ -1,4 +1,4 @@
-package com.mall.product.product.controller;
+package com.mall.product.product.app;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mall.product.product.entity.CategoryEntity;
 import com.mall.product.product.service.CategoryService;
-import com.mall.common.utils.PageUtils;
 import com.mall.common.utils.R;
 
 

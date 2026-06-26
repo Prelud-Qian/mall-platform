@@ -1,15 +1,12 @@
-package com.mall.product.product.controller;
+package com.mall.product.product.app;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.valid.AddGroup;
 import com.valid.UpdateGroup;
 import com.valid.UpdateStatusGroup;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +18,6 @@ import com.mall.product.product.entity.BrandEntity;
 import com.mall.product.product.service.BrandService;
 import com.mall.common.utils.PageUtils;
 import com.mall.common.utils.R;
-
-import javax.validation.Valid;
 
 
 /**

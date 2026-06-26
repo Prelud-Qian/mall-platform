@@ -1,4 +1,4 @@
-package com.mall.product.product.controller;
+package com.mall.product.product.app;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mall.product.product.entity.BrandEntity;
 import com.mall.product.product.vo.BrandVo;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

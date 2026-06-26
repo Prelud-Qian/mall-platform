@@ -1,4 +1,4 @@
-package com.mall.product.product.controller;
+package com.mall.product.product.app;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -7,13 +7,11 @@ import java.util.Map;
 
 import com.mall.product.product.entity.ProductAttrValueEntity;
 import com.mall.product.product.service.ProductAttrValueService;
-import com.mall.product.product.vo.AttrGroupRelationVo;
 import com.mall.product.product.vo.AttrRespVo;
 import com.mall.product.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.mall.product.product.entity.AttrEntity;
 import com.mall.product.product.service.AttrService;
 import com.mall.common.utils.PageUtils;
 import com.mall.common.utils.R;
