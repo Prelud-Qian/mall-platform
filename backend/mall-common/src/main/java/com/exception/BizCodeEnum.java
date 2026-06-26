@@ -27,7 +27,9 @@ public enum BizCodeEnum {
     VALID_EXCEPTION(10001, "参数格式校验失败"),
 
     // 仓储采购模块
-    PURCHASE_MERGE_FAIL(15001, "合并失败：仅【新建】状态采购单、新建状态采购需求允许合并");
+    PURCHASE_MERGE_FAIL(15001, "合并失败：仅【新建】状态采购单、新建状态采购需求允许合并"),
+
+    PRODUCT_UP_EXCEPTION(11000, "商品上架异常");
 
     private int code;
     private String msg;

@@ -8,6 +8,8 @@
 
 package com.mall.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
@@ -20,7 +22,27 @@ import java.util.Map;
  */
 public class R extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
-	
+
+	public <T> T getData(TypeReference<T> typeReference){
+		// 1. 从R中取出key=data对应的原始数据（Object类型）
+		/*
+			表面（静态）类型：Object（代码写出来的类型，编译器识别）
+			运行（实际）类型：ArrayList<JSONObject>（内存里真实存的集合，Feign 远程解析出来的）
+		 */
+		Object data = get("data");
+		// 2. 把Object序列化为JSON字符串
+		String s = JSON.toJSONString(data);
+		// 3. 根据TypeReference里记录的泛型类型，反序列化为指定对象T
+		T t = JSON.parseObject(s, typeReference);
+		return t;
+	}
+
+	// R 内部存储：{"code":0,"msg":"success","data":[SkuHasStockVo对象集合]}
+	public R setData(Object data){
+		put("data", data);
+		return this;
+	}
+
 	public R() {
 		put("code", 0);
 		put("msg", "success");
