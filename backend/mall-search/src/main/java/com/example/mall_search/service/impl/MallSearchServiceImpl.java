@@ -50,12 +50,10 @@ public class MallSearchServiceImpl implements MallSearchService {
     @Override
     public SearchResult search(SearchParam param) {
         // 动态构建出查询需要的DSL语句
-
         SearchResult result = null;
 
         // 准备检索请求
         SearchRequest searchRequest = buildSearchRequest(param);
-
 
         try {
             // 执行检索请求
@@ -67,8 +65,7 @@ public class MallSearchServiceImpl implements MallSearchService {
             throw new RuntimeException(e);
         }
 
-
-        return null;
+        return result;
     }
 
 
